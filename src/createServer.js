@@ -6,13 +6,13 @@ const http = require('http');
 const { convertToCase } = require('./convertToCase/convertToCase');
 const { errorsList } = require('./convertToCase/errorsList');
 
-const PORT = process.env.PORT || 5700;
+// const PORT = process.env.PORT || 5700;
 
 const SUPPORTED_CASES = ['SNAKE', 'KEBAB', 'CAMEL', 'PASCAL', 'UPPER'];
 
 function createServer() {
   const server = http.createServer((req, res) => {
-    const url = new URL(req.url, `http://${req.headers.host}:${PORT}`);
+    const url = new URL(req.url, `http://${req.headers.host}`);
 
     const textToConvert = url.pathname.slice(1);
     const caseName = url.searchParams.get('toCase');
@@ -41,14 +41,15 @@ function createServer() {
 
     const result = convertToCase(textToConvert, caseName);
 
-    const body = {
-      targetCase: caseName,
-      originalText: textToConvert,
-      ...result,
-    };
-
     res.statusCode = 200;
-    res.end(JSON.stringify({ body }));
+
+    res.end(
+      JSON.stringify({
+        targetCase: caseName,
+        originalText: textToConvert,
+        ...result,
+      }),
+    );
   });
 
   return server;
