@@ -33,6 +33,7 @@ function createServer() {
     res.setHeader('Content-Type', 'application/json');
 
     if (errors.length) {
+      res.statusMessage = 'Bad request';
       res.statusCode = 400;
       res.end(JSON.stringify({ errors }));
 
@@ -41,6 +42,7 @@ function createServer() {
 
     const result = convertToCase(textToConvert, caseName);
 
+    res.statusMessage = 'OK';
     res.statusCode = 200;
 
     res.end(
